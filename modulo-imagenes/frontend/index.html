@@ -12,13 +12,14 @@
 
 <body>
     <header class="magic-robotic-header">
-        <!-- Botón para abrir la barra lateral -->
-        <button id="abrirSidebar">Cartas</button>
-
+        <div class="botones-container">
+            <button id="abrirSidebar">Cartas</button>
+            <button id="subirSelfie" onclick="location.href='upload.html';">Subir Selfie</button>
+        </div>
         <!-- Barra lateral -->
         <div id="sidebar" class="sidebar">
             <button id="cerrarSidebar" class="cerrar-btn">&times;</button>
-            <h2>Cartas</h2>
+            <h3>Cartas</h3>
             <button id="verTodo">Ver todo</button>
             <!-- Contenedor para las cartas dentro del sidebar -->
             <div id="sidebarCartas"></div> 
