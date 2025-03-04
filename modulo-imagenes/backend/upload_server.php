@@ -21,7 +21,7 @@ try {
 
     // Obtener información del archivo
     $image = $_FILES["image"];
-    $uploadDir = "../aiweekend_selfi_card/uploads/"; // Carpeta donde se guardarán las imágenes
+    $uploadDir = "../Modulo-Imagenes-Eventos/modulo-imagenes/frontend/uploads/"; // Carpeta donde se guardarán las imágenes
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }

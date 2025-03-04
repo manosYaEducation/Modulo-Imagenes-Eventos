@@ -23,7 +23,7 @@ async function fetchImages(page = 1) {
     document.getElementById("result").innerText = "Cargando imágenes...";
 
     const response = await fetch(
-      `http://localhost/fusion_apis/backend/get_all_b64_2.php?page=${page}`
+      `http://localhost/Modulo-Imagenes-Eventos/modulo-imagenes/backend/get_all_b64_2.php?page=${page}`
     );
     const data = await response.json();
 
@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function mostrarCartasEnSidebar() {
     sidebarCartas.innerHTML = ""; // Limpiar contenido previo
   
-    fetch(`http://localhost/Fusion_apis/backend/get_all_b64_2.php?page=1`)
+    fetch(`http://localhost/Modulo-Imagenes-Eventos/modulo-imagenes/backend/get_all_b64_2.php?page=1`)
       .then(response => response.json())
       .then(data => {
         if (!data.totalPages) {
@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let cartasVista = new Set();
   
         for (let i = 1; i <= totalPages; i++) {
-          let promise = fetch(`http://localhost/Fusion_apis/backend/get_all_b64_2.php?page=${i}`)
+          let promise = fetch(`http://localhost/Modulo-Imagenes-Eventos/modulo-imagenes/backend/get_all_b64_2.php?page=${i}`)
             .then(response => response.json())
             .then(pageData => {
               if (pageData.images) {
@@ -249,7 +249,7 @@ async function fetchRelatedImages(carta_front) {
   try {
 
     const response = await fetch(
-      `http://localhost/Fusion_apis/backend/get_related_images.php?carta_front=${carta_front}`
+      `http://localhost/Modulo-Imagenes-Eventos/modulo-imagenes/backend/get_related_images.php?carta_front=${carta_front}`
     );
     const data = await response.json();
 
