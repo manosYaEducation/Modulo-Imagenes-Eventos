@@ -52,68 +52,6 @@ async function fetchImages(page = 1) {
   }
 }
 
-// Función para renderizar imágenes
-function renderImages(images) {
-  masonry.innerHTML = "";
-
-  const gridContainer = document.createElement("div");
-  gridContainer.className = "grid-container";
-
-  // Asignar aleatoriamente cuáles serán las imágenes destacadas
-  const featuredIndices = shuffleArray([...Array(images.length).keys()]).slice(
-    0,
-    2
-  );
-  
-  images.forEach((imgData, index) => {
-    const container = document.createElement("div");
-    container.className = "flip-container grid-item";
-
-    // Asignar featured aleatoriamente
-    if (featuredIndices.includes(index)) {
-      container.classList.add("featured");
-    }
-
-    const flipper = document.createElement("div");
-    flipper.className = "flipper";
-
-    const frontImg = document.createElement("img");
-    frontImg.className = "front";
-    // Verificar si la imagen es base64 o una URL externa
-    if (imgData.url && imgData.url.trim() !== "") {
-      frontImg.src = imgData.url; // Imagen desde una URL
-    } else {
-      frontImg.src = imgData.imagen; // Imagen en Base64
-    }
-      
-
-    // Imagen de carga mientras se carga la imagen real
-    frontImg.style.opacity = "0";
-    frontImg.onload = () => {
-      frontImg.style.opacity = "1";
-      container.style.transform = "translateY(0)";
-    };
-
-    const backImg = document.createElement("img");
-    backImg.className = "back";
-    backImg.src = imgData.carta_front;
-
-    flipper.appendChild(frontImg);
-    flipper.appendChild(backImg);
-    container.appendChild(flipper);
-    gridContainer.appendChild(container);
-
-    // Evento de click
-    container.addEventListener("click", () => {
-      container.classList.toggle("flipped");
-      const resultDisplay = document.getElementById("result");
-      resultDisplay.innerText = imgData.frase;
-    });
-  });
-
-  masonry.appendChild(gridContainer);
-}
-
 // Función para actualizar la paginación
 function updatePagination() {
   paginationContainer.innerHTML = "";
@@ -255,9 +193,7 @@ async function fetchRelatedImages(carta_front) {
     const response = await fetch(
       `http://localhost/Modulo-Imagenes-Eventos/modulo-imagenes/backend/get_related_images.php?carta_front=${carta_front}`
     );
-    console.log("hasta aqui llega");
     const data = await response.json();
-    console.log("aqui paso");
 
     if (data.images && data.images.length > 0) {
       // Mezclar las imágenes aleatoriamente
