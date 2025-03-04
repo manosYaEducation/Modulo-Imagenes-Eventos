@@ -64,7 +64,7 @@ function renderImages(images) {
     0,
     2
   );
-
+  
   images.forEach((imgData, index) => {
     const container = document.createElement("div");
     container.className = "flip-container grid-item";
@@ -80,7 +80,11 @@ function renderImages(images) {
     const frontImg = document.createElement("img");
     frontImg.className = "front";
     // Verificar si la imagen es base64 o una URL externa
-      frontImg.src = 'data:image/jpeg;base64,' + imgData.url; // Imagen en Base64
+    if (imgData.url && imgData.url.trim() !== "") {
+      frontImg.src = imgData.url; // Imagen desde una URL
+    } else {
+      frontImg.src = imgData.imagen; // Imagen en Base64
+    }
       
 
     // Imagen de carga mientras se carga la imagen real
@@ -298,7 +302,12 @@ function renderImages(images) {
 
     const frontImg = document.createElement("img");
     frontImg.className = "front";
-    frontImg.src = imgData.url;
+    // Verificar si la imagen es base64 o una URL externa
+    if (imgData.url && imgData.url.trim() !== "") {
+      frontImg.src = imgData.url; // Imagen desde una URL
+    } else {
+      frontImg.src = imgData.imagen; // Imagen en Base64
+    }
 
     // Imagen de carga mientras se carga la imagen real
     frontImg.style.opacity = "0";

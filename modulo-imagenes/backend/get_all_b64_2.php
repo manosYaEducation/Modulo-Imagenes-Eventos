@@ -67,7 +67,7 @@ function obtenerImagenes($conn)
         $offset = ($page - 1) * $imagesPerPage;
 
         // Obtener las imágenes para la página actual
-        $sql = "SELECT id, url, carta_front, frase, created_at 
+        $sql = "SELECT id, url, carta_front, frase, created_at, imagen
                 FROM imagenes_base64 
                 ORDER BY created_at DESC 
                 LIMIT ? OFFSET ?";
@@ -83,12 +83,14 @@ function obtenerImagenes($conn)
 
         $imagenes = [];
         while ($row = $result->fetch_assoc()) {
-            // Si la URL almacenada es una cadena Base64, la dejamos así.
-            // Si es una URL externa, la mantenemos.
-            if (strpos($row['url'], 'data:image/') === 0) {
-                $row['image_type'] = "base64"; // Marcamos que es una imagen en base64
+            // Si el campo `imagen` tiene datos, convertirlo a base64
+            if (!empty($row['imagen'])) {
+                $row['imagen'] = "data:image/jpeg;base64," . base64_encode($row['imagen']);
+                $row['image_type'] = "base64";
+            } elseif (!empty($row['url'])) {
+                $row['image_type'] = "url";
             } else {
-                $row['image_type'] = "url"; // Es una URL normal
+                $row['image_type'] = "unknown";
             }
             $imagenes[] = $row;
         }
