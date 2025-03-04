@@ -251,7 +251,9 @@ async function fetchRelatedImages(carta_front) {
     const response = await fetch(
       `http://localhost/Modulo-Imagenes-Eventos/modulo-imagenes/backend/get_related_images.php?carta_front=${carta_front}`
     );
+    console.log("hasta aqui llega");
     const data = await response.json();
+    console.log("aqui paso");
 
     if (data.images && data.images.length > 0) {
       // Mezclar las imágenes aleatoriamente
