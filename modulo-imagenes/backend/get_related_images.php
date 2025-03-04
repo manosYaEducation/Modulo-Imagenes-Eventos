@@ -48,7 +48,12 @@ if ($stmt = $conn->prepare($query)) {
             if (!empty($row['carta_front'])) { // Filtrar registros vacíos
                 // Convertir el BLOB en Base64 si existe
                 if (!empty($row['imagen'])) {
-                    $row['imagen'] = base64_encode($row['imagen']);
+                    $row['imagen'] = "data:image/jpeg;base64," . base64_encode($row['imagen']);
+                    $row['image_type'] = "base64";
+                } elseif (!empty($row['url'])) {
+                    $row['image_type'] = "url";
+                } else {
+                    $row['image_type'] = "unknown";
                 }
                 $imagenesRelacionadas[] = $row;
             }
