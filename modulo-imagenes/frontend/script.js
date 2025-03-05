@@ -63,7 +63,7 @@ function updatePagination() {
   }
 }
 
-// Función para actualizar la paginación
+// Función para actualizar la paginación de cartas relacionadas
 function updatePaginationRelated(carta_front) {
   paginationContainer.innerHTML = "";
 
