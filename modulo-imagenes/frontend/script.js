@@ -8,15 +8,6 @@ const paginationContainer = document.createElement("div");
 paginationContainer.className = "pagination-container";
 masonry.parentNode.insertBefore(paginationContainer, masonry.nextSibling);
 
-// Función para mezclar array aleatoriamente
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
 // Función para obtener imágenes
 async function fetchImages(page = 1) {
   try {
