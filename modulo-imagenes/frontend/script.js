@@ -63,6 +63,26 @@ function updatePagination() {
   }
 }
 
+// Función para actualizar la paginación
+function updatePaginationRelated(carta_front) {
+  paginationContainer.innerHTML = "";
+
+  // Solo mostrar botones si hay más de una página
+  if (totalPages > 1) {
+    for (let i = 1; i <= totalPages; i++) {
+      const pageButton = document.createElement("button");
+      pageButton.className = `page-button ${i === currentPage ? "active" : ""}`;
+      pageButton.innerText = i;
+      pageButton.onclick = () => {
+        if (i !== currentPage) {
+          fetchRelatedImages(carta_front, i);  // Pasamos carta_front y la página
+        }
+      };
+      paginationContainer.appendChild(pageButton);
+    }
+  }
+}
+
 // Botón de reorganizar
 const shuffleButton = document.createElement("button");
 shuffleButton.innerText = "Reorganizar";
@@ -178,24 +198,26 @@ document.addEventListener("DOMContentLoaded", function () {
 //Cartas sidebar
 
 // Función para obtener imágenes relacionadas
-async function fetchRelatedImages(carta_front) {
+async function fetchRelatedImages(carta_front, page = 1) { 
   try {
-
     const response = await fetch(
-      `http://localhost/Modulo-Imagenes-Eventos/modulo-imagenes/backend/get_related_images.php?carta_front=${carta_front}`
+      `http://localhost/Modulo-Imagenes-Eventos/modulo-imagenes/backend/get_related_images.php?carta_front=${carta_front}&page=${page}`
     );
     const data = await response.json();
 
     if (data.images && data.images.length > 0) {
-      // Mezclar las imágenes aleatoriamente
       const shuffledImages = shuffleArray([...data.images]);
-      renderImages(shuffledImages); // Renderizar las imágenes relacionadas
-      
+      renderImages(shuffledImages); 
+      totalPages = data.totalPages;
+      currentPage = data.currentPage;
+      updatePaginationRelated(carta_front);  // Asegurar que se actualice correctamente
+      document.getElementById(
+        "result"
+      ).innerText = `Mostrando página ${currentPage} de ${totalPages} (Total: ${data.total} imágenes)`;
     } else {
       document.getElementById("result").innerText = "No hay imágenes relacionadas disponibles.";
     }
 
-    // Oculta el GIF de carga después de cargar las imágenes
     document.getElementById('loading').style.display = 'none';
   } catch (error) {
     console.error("Error al obtener imágenes relacionadas:", error);

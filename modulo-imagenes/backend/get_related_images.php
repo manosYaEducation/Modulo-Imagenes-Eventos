@@ -34,38 +34,56 @@ if (!isset($_GET['carta_front'])) {
 
 $carta_front = $_GET['carta_front'];
 
-// Preparar la consulta
-$query = "SELECT * FROM imagenes_base64 WHERE carta_front = ?";
+// Configurar la paginación
+$imagesPerPage = 6;
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+
+// Contar el total de imágenes relacionadas
+$totalQuery = $conn->prepare("SELECT COUNT(*) as total FROM imagenes_base64 WHERE carta_front = ?");
+$totalQuery->bind_param('s', $carta_front);
+$totalQuery->execute();
+$totalResult = $totalQuery->get_result();
+$totalRow = $totalResult->fetch_assoc();
+$total = $totalRow['total'];
+
+$totalPages = ceil($total / $imagesPerPage);
+$page = min($page, $totalPages);
+
+// Calcular el offset
+$offset = ($page - 1) * $imagesPerPage;
+
+// Preparar la consulta con paginación
+$query = "SELECT * FROM imagenes_base64 WHERE carta_front = ? ORDER BY created_at DESC LIMIT ? OFFSET ?";
 if ($stmt = $conn->prepare($query)) {
-    $stmt->bind_param('s', $carta_front);
+    $stmt->bind_param('sii', $carta_front, $imagesPerPage, $offset);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Verificar si hay resultados
-    if ($result->num_rows > 0) {
-        $imagenesRelacionadas = [];
-        while ($row = $result->fetch_assoc()) {
-            if (!empty($row['carta_front'])) { // Filtrar registros vacíos
-                // Convertir el BLOB en Base64 si existe
-                if (!empty($row['imagen'])) {
-                    $row['imagen'] = "data:image/jpeg;base64," . base64_encode($row['imagen']);
-                    $row['image_type'] = "base64";
-                } elseif (!empty($row['url'])) {
-                    $row['image_type'] = "url";
-                } else {
-                    $row['image_type'] = "unknown";
-                }
-                $imagenesRelacionadas[] = $row;
+    $imagenesRelacionadas = [];
+    while ($row = $result->fetch_assoc()) {
+        if (!empty($row['carta_front'])) { // Filtrar registros vacíos
+            // Convertir el BLOB en Base64 si existe
+            if (!empty($row['imagen'])) {
+                $row['imagen'] = "data:image/jpeg;base64," . base64_encode($row['imagen']);
+                $row['image_type'] = "base64";
+            } elseif (!empty($row['url'])) {
+                $row['image_type'] = "url";
+            } else {
+                $row['image_type'] = "unknown";
             }
+            $imagenesRelacionadas[] = $row;
         }
-        echo json_encode(["images" => $imagenesRelacionadas]);
-        exit();
-    } else {
-        echo json_encode(["error" => "No se encontraron imágenes relacionadas"]);
-        exit();
     }
 
-    $stmt->close();
+    echo json_encode([
+        "images" => $imagenesRelacionadas,
+        "currentPage" => $page,
+        "totalPages" => $totalPages,
+        "total" => $total,
+        "imagesPerPage" => $imagesPerPage,
+        "showing" => count($imagenesRelacionadas)
+    ]);
+    exit();
 } else {
     echo json_encode(["error" => "Error en la consulta"]);
     exit();
