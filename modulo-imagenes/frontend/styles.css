@@ -536,3 +536,48 @@ button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(138, 43, 226, 0.3);
 }
+
+@media (max-width: 768px) { 
+    #sidebarCartas {
+        display: flex;
+        flex-direction: row; 
+        flex-wrap: wrap; 
+        overflow-y: auto; 
+    }
+
+    .sidebar-carta {
+        width: 100%; 
+        max-width: 120px; 
+        margin: 10px auto;
+       
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+}
+
+
+@media (max-width: 480px) { 
+    .sidebar {
+        width: 180px; 
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    #verTodo {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .sidebar-carta {
+        max-width: 80px;
+        margin: 5px auto; 
+    }
+
+    .contenido-desplazado {
+        margin-left: 200px; 
+    }
+}
